@@ -2,7 +2,7 @@
 'use strict';
 
 const yaml = require('js-yaml');
-const colors = require('colors');
+const chalk = require('chalk');
 
 const fs = require('fs');
 const path = require('path');
@@ -88,13 +88,13 @@ class ColorLS {
 
   display_report() {
     const len = this.contents.reduce((a, b) => a.concat(b), []).length;
-    process.stdout.write(util.format(`\n Found ${len} contents in directory `.white));
+    process.stdout.write(util.format(chalk.white(`\n Found ${len} contents in directory `)));
 
-    process.stdout.write(util.format(this.input.blue));
+    process.stdout.write(util.format(chalk.blue(this.input)));
 
-    process.stdout.write(util.format(`\n\n\tFolders\t\t\t: ${this.count.folders}`.white));
-    process.stdout.write(util.format(`\n\tRecognized files\t: ${this.count.recognized_files}`.white));
-    process.stdout.write(util.format(`\n\tUnrecognized files\t: ${this.count.unrecognized_files}`.white));
+    process.stdout.write(util.format(chalk.white(`\n\n\tFolders\t\t\t: ${this.count.folders}`)));
+    process.stdout.write(util.format(chalk.white(`\n\tRecognized files\t: ${this.count.recognized_files}`)));
+    process.stdout.write(util.format(chalk.white(`\n\tUnrecognized files\t: ${this.count.unrecognized_files}`)));
     process.stdout.write(util.format('\n\n'));
   }
 
@@ -107,7 +107,7 @@ class ColorLS {
     //  - it does the replacement by running each match through the function m -> m[-4..-1.to_i(16)].pack('U')
     // this last part needs to be disected still, but it seems to make enough sense.
     // logo  = value.gsub(/\\u[\da-f]{4}/i) { |m| [m[-4..-1].to_i(16)].pack('U') }
-    return `${value}  ${content}`[color];
+    return chalk[color](`${value}  ${content}`);
   }
 
   load_from_yaml(filename, aliases) {
@@ -128,7 +128,7 @@ class ColorLS {
       process.stdout.write(util.format(fetch));
       let isFile = fs.existsSync(`${this.input}/${content}`) &&
     fs.lstatSync(`${this.input}/${content}`).isDirectory();
-      process.stdout.write(util.format(isFile ? '/ '.blue : '  '));
+      process.stdout.write(util.format(isFile ? chalk.blue('/ ') : '  '));
       let space = new Array(this.max_widths[i] - content.length + 2).join(' ');
       process.stdout.write(util.format(space));
     }
@@ -172,5 +172,3 @@ if (filtered.length === 0) {
     new ColorLS(path, report).ls();
   });
 }
-
-
